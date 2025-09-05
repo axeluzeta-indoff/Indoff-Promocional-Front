@@ -1,0 +1,13 @@
+{
+  "name": "indoffpro",
+  "private": true,
+  "workspaces": ["front", "api", "shared"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev:front": "npm --workspace front run dev",
+    "dev:api": "npm --workspace api run start:dev",
+    "build:front": "npm --workspace front run build",
+    "build:api": "npm --workspace api run build",
+    "lint": "echo \"(pendiente: agregar eslint/prettier luego)\""
+  }
+}
