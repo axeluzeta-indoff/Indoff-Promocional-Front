@@ -5,31 +5,30 @@ import type { Request, Response } from 'express';
 export class CookiesController {
   @Get('set')
   set(@Res({ passthrough: true }) res: Response) {
+    // Opciones seguras por defecto
+    const secure = process.env.NODE_ENV === 'production';
     res.cookie('test_cookie', 'hola', {
       httpOnly: true,
       sameSite: 'lax',
-      secure: false, // en prod: true
+      secure,
+      maxAge: 30 * 60 * 1000, // 30min
       path: '/',
       // domain: '.indoffpro.com', // en prod
-      maxAge: 1000 * 60 * 30, // 30 min
     });
-    return { ok: true };
+    return { set: true };
   }
 
   @Get('read')
-  read(@Req() req: Request) {
-    return { test_cookie: req.cookies?.['test_cookie'] ?? null };
+  read(@Req() req: Request): { test_cookie: string | null } {
+    // Narrowing para evitar any
+    const raw: unknown = req.cookies?.['test_cookie'];
+    const value = typeof raw === 'string' ? raw : null;
+    return { test_cookie: value };
   }
 
   @Get('clear')
   clear(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('test_cookie', {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: false,
-      path: '/',
-      // domain: '.indoffpro.com',
-    });
+    res.clearCookie('test_cookie', { path: '/' });
     return { cleared: true };
   }
 }
