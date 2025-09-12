@@ -10,8 +10,8 @@ This repository contains all the files that were created for the Indoff Promocio
 ## Repository Structure
 .
 ├─ front/ # Web app (React + Vite)
-├─ api/ # API service (NestJS + Prisma)
-└─ shared/ # Shared DTOs/types
+└─ api/ # API service (NestJS + Prisma)
+
 
 ## Monorepo with npm Workspaces
 Workspaces are declared in the root `package.json`:

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-// api/prisma/seed.ts
+//Seed que carga los datos para la base de datos de prueba ya si poder probar funcionalidades
 import { PrismaClient, Role, CartStatus } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { faker } from '@faker-js/faker';

@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 
 export default function Header() {
   return (
-    <header className="bg-amber-100 border-b">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Menú (hamburger) */}
+    <header className="bg-[#f0dbbe] border-b">
+      <div className="max-w-6xl mx-auto px-4 h-20 flex items-center justify-between">
+        {/* Menú (hamburger)*/}
         <button
           aria-label="Abrir menú"
           className="p-2 rounded hover:bg-amber-200 focus:outline-none focus:ring"
@@ -16,8 +16,7 @@ export default function Header() {
 
         {/* Logo */}
         <Link to="/" className="inline-flex items-center">
-          {/* Pon tu SVG/PNG real en /public y cambia el src */}
-          <img src="/logo_indoff_pro.png" alt="Indoff Pro" className="h-8 w-auto" />
+          <img src="/logo_indoff_pro.png" alt="Indoff Pro" className="h-16 w-auto" />
         </Link>
 
         {/* Carrito */}

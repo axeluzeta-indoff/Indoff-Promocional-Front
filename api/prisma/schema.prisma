@@ -1,4 +1,7 @@
 // This is your Prisma schema file,
+//Schema de la abse de datos cada vez que se necesite hacer un cambio en la abse de datos se hace desde aqui
+//Una vez hecho el cambio las migraciones se corren para aplicar los cmabios primeor en local y se se aprueban en prod
+//Las reglas se añaden en la migracion que realices hasta abajo "init_schema" es el schema inicial de la abse de datos
 // learn more: https://pris.ly/d/prisma-schema
 
 generator client {
