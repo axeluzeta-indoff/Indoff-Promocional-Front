@@ -1,40 +1,69 @@
-# Indoff-Promocional-Original
-This repository contains all the files that were created for the Indoff Promocionales website, these are saved for recovery purposes and need to be protected and treated as a backup.
+# React + TypeScript + Vite
 
-## Tech Stack
-- **Frontend:** React + Vite + TypeScript + TailwindCSS  
-- **API:** NestJS + Prisma  
-- **Database:** PostgreSQL  
-- **Node:** 20.x (pinned via `.nvmrc`)
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Repository Structure
-.
-├─ front/ # Web app (React + Vite)
-└─ api/ # API service (NestJS + Prisma)
+Currently, two official plugins are available:
 
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-## Monorepo with npm Workspaces
-Workspaces are declared in the root `package.json`:
+## Expanding the ESLint configuration
 
-- **Workspaces:** `["front", "api", "shared"]`
-- **Root scripts** to orchestrate packages:
-  - `npm run dev:front` → start frontend (Vite dev server)
-  - `npm run dev:api` → start API (Nest in watch mode)
-  - `npm run build:front` → build frontend
-  - `npm run build:api` → build API
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-## Requirements
-- **Node 20+** (recommended: use `nvm`)
-- **npm 10+**
+```js
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-## First-Time Setup (Local)
-```bash
-# 1) Use Node 20
-nvm use
+      // Remove tseslint.configs.recommended and replace with this
+      ...tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      ...tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      ...tseslint.configs.stylisticTypeChecked,
 
-# 2) Install root dependencies (enables workspaces)
-npm i
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
 
-# 3) Start frontend and API (in separate terminals)
-npm run dev:front
-npm run dev:api
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default tseslint.config([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+```
