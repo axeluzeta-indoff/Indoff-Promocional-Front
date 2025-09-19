@@ -1,24 +1,24 @@
 deployment:
   tasks:
-    # Activar Node 20 del servidor (reutilizamos el venv que ya tienes)
+    # Activar Node.js v20 para el front (venv propio, opcional)
     - /bin/echo "→ Activating Node venv"
-    - source /home/indoff7/nodevenv/indoffpro_api/20/bin/activate
+    - source /home/indoff7/nodevenv/indoffpro_front_build/20/bin/activate
 
-    # Entrar al repo clonado en el servidor (lo crearemos en el siguiente paso)
+    # Entrar al repo clonado
     - /bin/echo "→ Entering repo"
     - cd /home/indoff7/indoffpro_front
 
-    # Instalar y construir
-    - /bin/echo "→ Installing deps"
+    # Instalar dependencias y compilar
+    - /bin/echo "→ Installing dependencies"
     - npm ci
-    - /bin/echo "→ Building"
+    - /bin/echo "→ Building production bundle"
     - npm run build
 
-    # Publicar build al docroot del sitio
-    - /bin/echo "→ Deploying dist/ to docroot"
+    # Copiar build al docroot de indoffpro.com
+    - /bin/echo "→ Deploying to docroot"
     - /bin/rsync -a --delete dist/ /home/indoff7/indoffpro.com/
 
-    # Reglas SPA (React Router) si no existe .htaccess
+    # SPA fallback para React Router (solo si no existe .htaccess)
     - /bin/test -f /home/indoff7/indoffpro.com/.htaccess || /bin/bash -lc 'cat > /home/indoff7/indoffpro.com/.htaccess << "EOF"
       RewriteEngine On
       RewriteBase /
@@ -26,13 +26,4 @@ deployment:
       RewriteCond %{REQUEST_FILENAME} -d
       RewriteRule ^ - [L]
       RewriteRule . /index.html [L]
-      <IfModule mod_expires.c>
-        ExpiresActive On
-        ExpiresByType text/html "access plus 0 seconds"
-        ExpiresByType text/css "access plus 7 days"
-        ExpiresByType application/javascript "access plus 7 days"
-        ExpiresByType image/webp "access plus 30 days"
-        ExpiresByType image/png "access plus 30 days"
-        ExpiresByType image/jpeg "access plus 30 days"
-      </IfModule>
       EOF'
