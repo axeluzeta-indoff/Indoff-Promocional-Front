@@ -1,28 +1,16 @@
 deployment:
   tasks:
-    - /bin/bash -lc '
-        set -e
-
-        # 1) Activar Node 20 del venv del front
-        source /home/indoff7/nodevenv/indoffpro_front_build/20/bin/activate
-
-        # 2) Ir al repo del front
-        cd /home/indoff7/indoffpro_front
-
-        # 3) Instalar deps y construir
-        npm ci
-        npm run build
-
-        # 4) Publicar dist/ al docroot del sitio
-        rsync -a --delete dist/ /home/indoff7/indoffpro.com/
-
-        # 5) SPA fallback básico
-        if [ ! -f /home/indoff7/indoffpro.com/.htaccess ]; then
-          cat > /home/indoff7/indoffpro.com/.htaccess << "EOF"
-RewriteEngine On
-RewriteRule . /index.html [L]
-EOF
-        fi
-
-        echo "✓ Front deploy completo"
-      '
+    - /bin/echo "→ Activating Node venv"
+    - source /home/indoff7/nodevenv/indoffpro_front_build/20/bin/activate
+    - /bin/echo "→ Entering repo"
+    - cd /home/indoff7/indoffpro_front
+    - /bin/echo "→ Installing deps"
+    - npm ci
+    - /bin/echo "→ Building"
+    - npm run build
+    - /bin/echo "→ Deploying dist/ to docroot"
+    - rsync -a --delete dist/ /home/indoff7/indoffpro.com/
+    - /bin/test -f /home/indoff7/indoffpro.com/.htaccess || /bin/bash -lc 'cat > /home/indoff7/indoffpro.com/.htaccess << "EOF"
+      RewriteEngine On
+      RewriteRule . /index.html [L]
+      EOF'
