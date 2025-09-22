@@ -1,17 +1,6 @@
 deployment:
   tasks:
-    - /bin/echo "→ Build & deploy front"
-
-    # Instalar deps (incluye dev)
-    - /bin/bash -lc 'source /home/indoff7/nodevenv/indoffpro_front_build/20/bin/activate && cd /home/indoff7/indoffpro_front && export NPM_CONFIG_PRODUCTION=false && npm ci --include=dev'
-
-    # Compilar
-    - /bin/bash -lc 'source /home/indoff7/nodevenv/indoffpro_front_build/20/bin/activate && cd /home/indoff7/indoffpro_front && npm run build'
-
-    # Publicar dist/ al docroot
-    - /bin/bash -lc 'cd /home/indoff7/indoffpro_front && rsync -a --delete dist/ /home/indoff7/indoffpro.com/'
-
-    # SPA fallback simple (si no existe)
+    - /bin/echo "→ Deploying prebuilt dist"
+    - /bin/rsync -a --delete /home/indoff7/indoffpro_front/dist/ /home/indoff7/indoffpro.com/
     - /bin/bash -lc '[ -f /home/indoff7/indoffpro.com/.htaccess ] || echo -e "RewriteEngine On\nRewriteRule . /index.html [L]" > /home/indoff7/indoffpro.com/.htaccess'
-
-    - /bin/echo "✓ Done"
+    
