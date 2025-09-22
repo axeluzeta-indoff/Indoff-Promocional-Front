@@ -2,44 +2,27 @@ deployment:
   tasks:
     - /bin/bash -lc '
         set -e
-        echo "→ Activating Node venv";
-        source /home/indoff7/nodevenv/indoffpro_front_build/20/bin/activate;
 
-        echo "→ Entering repo";
-        cd /home/indoff7/indoffpro_front;
+        # 1) Activar Node 20 del venv del front
+        source /home/indoff7/nodevenv/indoffpro_front_build/20/bin/activate
 
-        echo "→ Node/NPM versions";
-        node -v && npm -v;
+        # 2) Ir al repo del front
+        cd /home/indoff7/indoffpro_front
 
-        echo "→ Installing deps (npm ci)";
-        npm ci;
+        # 3) Instalar deps y construir
+        npm ci
+        npm run build
 
-        echo "→ Building";
-        npm run build;
+        # 4) Publicar dist/ al docroot del sitio
+        rsync -a --delete dist/ /home/indoff7/indoffpro.com/
 
-        echo "→ Deploying dist/ to docroot";
-        rsync -a --delete dist/ /home/indoff7/indoffpro.com/;
-
-        echo "→ Ensuring SPA .htaccess";
+        # 5) SPA fallback básico
         if [ ! -f /home/indoff7/indoffpro.com/.htaccess ]; then
           cat > /home/indoff7/indoffpro.com/.htaccess << "EOF"
-          RewriteEngine On
-          RewriteBase /
-          RewriteCond %{REQUEST_FILENAME} -f [OR]
-          RewriteCond %{REQUEST_FILENAME} -d
-          RewriteRule ^ - [L]
-          RewriteRule . /index.html [L]
-          <IfModule mod_expires.c>
-            ExpiresActive On
-            ExpiresByType text/html "access plus 0 seconds"
-            ExpiresByType text/css "access plus 7 days"
-            ExpiresByType application/javascript "access plus 7 days"
-            ExpiresByType image/webp "access plus 30 days"
-            ExpiresByType image/png "access plus 30 days"
-            ExpiresByType image/jpeg "access plus 30 days"
-          </IfModule>
-          EOF
+RewriteEngine On
+RewriteRule . /index.html [L]
+EOF
         fi
 
-        echo "✓ Done"
+        echo "✓ Front deploy completo"
       '
