@@ -10,9 +10,9 @@ lerna-debug.log*
 # Dependencies
 node_modules/
 
-# Build output
-dist/
-dist-ssr/
+# Build output temporal en lo que se implementan las github actions, no se puede buildear en inmotion por memoria
+#dist/
+#dist-ssr/
 
 # Env files (ignora todos excepto .env.example)
 .env

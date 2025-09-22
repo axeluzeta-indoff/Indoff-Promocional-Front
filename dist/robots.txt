@@ -1,0 +1,14 @@
+# robots.txt para Indoff Pro
+
+# Aplica a todos los bots
+User-agent: *
+
+# No queremos que indexen el panel de administración ni el API
+Disallow: /admin
+Disallow: /api
+
+# Permitimos el resto del sitio
+Allow: /
+
+# Sitemap con todas las URLs públicas de productos y categorías
+Sitemap: https://indoffpro.com/sitemap.xml
