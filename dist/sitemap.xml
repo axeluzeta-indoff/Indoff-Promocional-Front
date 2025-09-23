@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Home -->
+  <url>
+    <loc>https://indoffpro.com/</loc>
+    <lastmod>2025-09-23</lastmod>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Producto de prueba -->
+  <url>
+    <loc>https://indoffpro.com/category/reclutamiento/bolsas/bolsa-de-cordon</loc>
+    <lastmod>2025-09-23</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
