@@ -1,5 +1,9 @@
 deployment:
   tasks:
-    - /bin/echo "→ Deploying prebuilt dist (preserve uploads, copy .htaccess)"
-    - /bin/rsync -a --delete --exclude 'uploads/' /home/indoff7/indoffpro_front/dist/ /home/indoff7/indoffpro.com/
+    - /bin/echo "→ Deploying prebuilt dist (preserve & protect uploads, copy .htaccess)"
+    - /bin/rsync -a --delete \
+        --exclude 'uploads/' \
+        --filter='protect uploads/' \
+        /home/indoff7/indoffpro_front/dist/ /home/indoff7/indoffpro.com/
     - /bin/cp -f /home/indoff7/indoffpro_front/deploy/.htaccess /home/indoff7/indoffpro.com/.htaccess
+    - /bin/bash -lc '[ -L /home/indoff7/indoffpro.com/uploads ] || ln -s ../uploads /home/indoff7/indoffpro.com/uploads'
