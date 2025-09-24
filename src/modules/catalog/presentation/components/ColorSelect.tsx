@@ -11,8 +11,7 @@ const mapCss = (c: string) => {
     gris: "gray",
     naranja: "orange",
     morado: "purple",
-    café: "saddlebrown",
-    marrón: "saddlebrown",
+    café: "brown",
   };
   return m[c.toLowerCase()] ?? c; // acepta #hex, rgb(...), etc.
 };
@@ -71,7 +70,7 @@ export default function ColorSelect({
         value={value ?? undefined}
         onChange={(v) => onChange(v || null)}
         options={options}
-        optionLabelProp="label"   // 👈 muestra el label (con punto) en el control
+        optionLabelProp="label"   // muestra el label (con punto) en el control
         allowClear
       />
     </div>

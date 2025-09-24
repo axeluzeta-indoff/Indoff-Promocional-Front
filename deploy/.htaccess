@@ -1,0 +1,25 @@
+# Activa rewrite
+RewriteEngine On
+RewriteBase /
+
+# (Opcional) Fuerza HTTPS por si alguien llega en http lcl
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# 301: redirige TODO el tráfico con www -> sin www (dominio canónico)
+RewriteCond %{HTTP_HOST} ^www\.indoffpro\.com$ [NC]
+RewriteRule ^(.*)$ https://indoffpro.com/$1 [L,R=301]
+
+# EXCEPCIONES: serve tal cual robots y sitemap
+RewriteRule ^(robots\.txt|sitemap\.xml)$ - [L]
+
+# Si el recurso existe como archivo o directorio, sírvelo tal cual
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Fallback de SPA (React/Vite): todo lo demás va a index.html
+RewriteRule ^ index.html [L]
+
+# Asegurar MIME correcto para XML (evita "Couldn't fetch" en GSC)
+AddType application/xml .xml

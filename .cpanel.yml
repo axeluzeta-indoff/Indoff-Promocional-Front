@@ -1,6 +1,5 @@
 deployment:
   tasks:
-    - /bin/echo "→ Deploying prebuilt dist"
-    - /bin/rsync -a --delete /home/indoff7/indoffpro_front/dist/ /home/indoff7/indoffpro.com/
-    - /bin/bash -lc '[ -f /home/indoff7/indoffpro.com/.htaccess ] || echo -e "RewriteEngine On\nRewriteRule . /index.html [L]" > /home/indoff7/indoffpro.com/.htaccess'
-    
+    - /bin/echo "→ Deploying prebuilt dist (preserve uploads, copy .htaccess)"
+    - /bin/rsync -a --delete --exclude 'uploads/' /home/indoff7/indoffpro_front/dist/ /home/indoff7/indoffpro.com/
+    - /bin/cp -f /home/indoff7/indoffpro_front/deploy/.htaccess /home/indoff7/indoffpro.com/.htaccess

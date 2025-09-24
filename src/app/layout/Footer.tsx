@@ -44,7 +44,7 @@ export default function Footer() {
             </p>
             <div className="mt-4 flex items-center justify-center sm:justify-start gap-3">
               <a //TODO: Cambiar links a las redes de indoff
-                href="https://facebook.com" target="_blank" rel="noopener noreferrer"
+                href="https://www.facebook.com/indoffpro" target="_blank" rel="noopener noreferrer"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#c21320] text-white
                            hover:bg-[#67161f] focus:outline-none focus:ring-2 focus:ring-[#c21320]"
                 aria-label="Facebook"
@@ -55,7 +55,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://linkedin.com" target="_blank" rel="noopener noreferrer"
+                href="https://www.linkedin.com/company/indoff-pro" target="_blank" rel="noopener noreferrer"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#c21320] text-white
                            hover:bg-[#67161f] focus:outline-none focus:ring-2 focus:ring-[#c21320]"
                 aria-label="LinkedIn"
