@@ -1,4 +1,4 @@
-// src/modules/catalog/presentation/pages/ProductDetailPage.tsx
+//TODO: Separar en componentes para reducir tamaño del archivo
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { InputNumber } from "antd";
@@ -55,7 +55,10 @@ function Skeleton() {
 }
 
 function Detail({ product, categorySlug, subSlug }: { product: Product; categorySlug: string; subSlug: string }) {
-  const mainImg = product.images?.[0];
+  // estados para galería
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const imgs = product.images ?? [];
+  const mainImg = imgs[selectedIndex];
 
   // Datos de variantes desde atributos
   const sizes = product.attributes?.sizes ?? [];
@@ -73,6 +76,21 @@ function Detail({ product, categorySlug, subSlug }: { product: Product; category
     (!needsColor || !!selectedColor) &&
     qty > 0;
 
+  // lightbox simple
+  const [open, setOpen] = useState(false);
+
+  //teclado para navegar entre thumbs
+  const onThumbKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, i: number) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      setSelectedIndex(i);
+    } else if (e.key === "ArrowRight") {
+      setSelectedIndex((p) => Math.min(p + 1, imgs.length - 1));
+    } else if (e.key === "ArrowLeft") {
+      setSelectedIndex((p) => Math.max(p - 1, 0));
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
       {/* Galería */}
@@ -82,30 +100,48 @@ function Detail({ product, categorySlug, subSlug }: { product: Product; category
             <img
               src={mainImg.url}
               alt={mainImg.alt ?? product.name}
-              loading="lazy"
-              className="h-full w-full object-cover"
+              loading="eager"
+              decoding="async"
+              className="h-full w-full object-cover cursor-zoom-in"
+              onClick={() => setOpen(true)} // ★ abre lightbox
             />
           ) : (
             <div className="h-full w-full grid place-items-center text-sm text-gray-400">Sin imagen</div>
           )}
         </div>
-        {product.images && product.images.length > 1 && (
+
+        {imgs.length > 1 && (
           <div className="mt-3 grid grid-cols-5 gap-2">
-            {product.images.slice(0, 5).map((img, i) => (
-              <div key={i} className="aspect-square rounded-lg overflow-hidden border bg-white">
-                <img src={img.url} alt={img.alt ?? product.name} loading="lazy" className="h-full w-full object-cover" />
-              </div>
+            {imgs.slice(0, 5).map((img, i) => (
+              <button
+                key={i}
+                type="button"
+                className={`aspect-square rounded-lg overflow-hidden border bg-white ring-2 transition
+                  ${i === selectedIndex ? "ring-[#c21320]" : "ring-transparent hover:ring-black/10"}`}
+                onClick={() => setSelectedIndex(i)}
+                onKeyDown={(e) => onThumbKeyDown(e, i)}
+                aria-current={i === selectedIndex ? "true" : undefined}
+                aria-label={`Imagen ${i + 1} de ${imgs.length}`}
+              >
+                <img
+                  src={img.url}
+                  alt={img.alt ?? product.name}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
+              </button>
             ))}
           </div>
         )}
       </div>
 
-      {/* Info */}
+      {/* Info (igual que lo tenías) */}
       <div>
         <h1 className="text-2xl md:text-3xl font-bold text-[#11110f]">{product.name}</h1>
         {product.description && <p className="mt-2 text-[#11110f]/80">{product.description}</p>}
 
-        {/* Pickers de variantes (Ant Design) */}
+        {/* Pickers de variantes */}
         <div className="mt-6 space-y-4">
           <VariantPicker
             label="Talla"
@@ -113,26 +149,18 @@ function Detail({ product, categorySlug, subSlug }: { product: Product; category
             options={sizes}
             value={selectedSize}
             onChange={setSelectedSize}
-            mode="segmented"     // usa "select" si prefieres dropdown
+            mode="segmented"
             hidden={!needsSize}
           />
-
           <ColorSelect
             colors={colors}
             value={selectedColor}
             onChange={setSelectedColor}
             hidden={!needsColor}
-            />
-
-          {/* Cantidad */}
+          />
           <div className="flex items-center gap-3">
             <label className="text-sm font-medium text-[#11110f] min-w-16" htmlFor="qty">Cantidad</label>
-            <InputNumber
-              id="qty"
-              min={1}
-              value={qty}
-              onChange={(v) => setQty(Number(v || 1))}
-            />
+            <InputNumber id="qty" min={1} value={qty} onChange={(v) => setQty(Number(v || 1))} />
           </div>
         </div>
 
@@ -159,18 +187,13 @@ function Detail({ product, categorySlug, subSlug }: { product: Product; category
             Añadir al carrito
           </button>
 
-          <Link
-            to="/quote"
-            className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-[#11110f] bg-white hover:bg-[#f7f7f7] ring-1 ring-[#11110f]/10"
-          >
+          <Link to="/quote" className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-[#11110f] bg-white hover:bg-[#f7f7f7] ring-1 ring-[#11110f]/10">
             Solicitar cotización
           </Link>
         </div>
 
-        {/* Atributos (resumen tipado) */}
         <Attributes attrs={product.attributes} />
 
-        {/* Metadatos */}
         <dl className="mt-6 grid grid-cols-2 gap-4 text-sm text-[#11110f]/80">
           <div>
             <dt className="font-semibold text-[#11110f]">Categoría</dt>
@@ -182,6 +205,56 @@ function Detail({ product, categorySlug, subSlug }: { product: Product; category
           </div>
         </dl>
       </div>
+
+      {/* ★ Lightbox accesible (sin librerías) */}
+      {open && mainImg?.url && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setOpen(false)} // clic fuera cierra
+        >
+          <button
+            type="button"
+            aria-label="Cerrar"
+            className="absolute top-4 right-4 text-white/90 bg-white/10 hover:bg-white/20 rounded-full px-3 py-1"
+            onClick={() => setOpen(false)}
+          >
+            Cerrar
+          </button>
+
+          <img
+            src={mainImg.url}
+            alt={mainImg.alt ?? product.name}
+            className="max-h-[85vh] max-w-[90vw] object-contain cursor-zoom-out"
+            onClick={(e) => { e.stopPropagation(); setOpen(false); }} // evita burbuja
+          />
+
+          {/* Controles prev/next si hay varias */}
+          {imgs.length > 1 && (
+            <>
+              <button
+                type="button"
+                aria-label="Anterior"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/90 bg-white/10 hover:bg-white/20 rounded-full px-3 py-2"
+                onClick={(e) => { e.stopPropagation(); setSelectedIndex((p) => Math.max(p - 1, 0)); }}
+                disabled={selectedIndex === 0}
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                aria-label="Siguiente"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/90 bg-white/10 hover:bg-white/20 rounded-full px-3 py-2"
+                onClick={(e) => { e.stopPropagation(); setSelectedIndex((p) => Math.min(p + 1, imgs.length - 1)); }}
+                disabled={selectedIndex === imgs.length - 1}
+              >
+                ›
+              </button>
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -42,7 +42,6 @@ export default function CategoryHoverMenu({ category, children }: { category: Ca
       setActiveSub(next);
       prefetchProductsPreview(qc, category.slug, next, 6);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, subs.length, category.slug]);
 
   // 2) cuando el usuario cambia subcat, recordarla
@@ -105,7 +104,14 @@ export default function CategoryHoverMenu({ category, children }: { category: Ca
               <Link
                 key={p.id}
                 to={`/category/${category.slug}/${activeSub}/${p.slug}`}
-                className="group rounded-xl border bg-white p-3 hover:shadow-sm transition"
+                className={`
+                  group rounded-xl border bg-white p-3 transition
+                  shadow-sm
+                  border-gray-200
+                  hover:border-gray-300 hover:shadow-md
+                  focus:outline-none focus-visible:outline-none
+                  focus-visible:ring-2 focus-visible:ring-[#c21320]/70
+                `}
               >
                 <div className="aspect-square rounded-lg overflow-hidden bg-gray-50 border">
                   {p.images?.[0]?.url ? (
@@ -113,13 +119,14 @@ export default function CategoryHoverMenu({ category, children }: { category: Ca
                       src={p.images[0].url}
                       alt={p.images[0].alt ?? p.name}
                       loading="lazy"
-                      className="h-full w-full object-cover group-hover:scale-[1.02] transition"
+                      decoding="async"
+                      className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
                     />
                   ) : (
                     <div className="grid place-items-center h-full text-gray-400 text-xs">Sin imagen</div>
                   )}
                 </div>
-                <div className="mt-2 text-xs font-medium line-clamp-2">{p.name}</div>
+                <div className="mt-2 text-xs font-medium line-clamp-2 text-[#11110f]">{p.name}</div>
               </Link>
             ))}
 
@@ -146,4 +153,3 @@ export default function CategoryHoverMenu({ category, children }: { category: Ca
     </Popover>
   );
 }
-

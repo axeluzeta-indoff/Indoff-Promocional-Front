@@ -13,13 +13,13 @@ export default function CategoriesPage() {
         <div className="max-w-6xl mx-auto px-4 py-10 md:py-14">
           <div className="rounded-2xl border bg-white/70 backdrop-blur px-6 py-8 md:px-10 md:py-12 shadow-sm">
             <span className="inline-block text-xs font-semibold tracking-wider text-[#67161f] bg-[#c21320]/10 ring-1 ring-[#c21320]/20 rounded-full px-3 py-1">
-              Indoff Pro · México
+              Indoff Pro · Tijuana, B.C., México.
             </span>
             <h1 className="mt-4 text-3xl md:text-4xl font-bold text-[#11110f]">
               Promocionales con Propósito
             </h1>
             <p className="mt-2 text-[#11110f]/70 max-w-2xl">
-              Artículos para <b>Recruiting</b>, <b>Retention</b> y <b>Recognition</b>.
+              Artículos para <b>Reclutamiento</b>, <b>Retención</b> y <b>Reconocimiento</b>.
               Personalización, calidad y soporte cercano.
             </p>
 

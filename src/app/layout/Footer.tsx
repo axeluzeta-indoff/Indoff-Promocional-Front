@@ -40,7 +40,7 @@ export default function Footer() {
           <div className="text-center sm:text-left">
             <img src="/logo_indoff_pro.png" alt="Indoff Pro" className="h-10 w-auto mx-auto sm:mx-0" />
             <p className="mt-3 text-sm/6 text-[#11110f]/80">
-              Promocionales con propósito. Soluciones para recruiting, retention y recognition.
+              Promocionales con propósito. Soluciones para reclutamiento, retención y reconocimiento.
             </p>
             <div className="mt-4 flex items-center justify-center sm:justify-start gap-3">
               <a //TODO: Cambiar links a las redes de indoff
