@@ -1,25 +1,33 @@
-# Activa rewrite
+# Activa motor de reescritura
 RewriteEngine On
 RewriteBase /
 
-# (Opcional) Fuerza HTTPS por si alguien llega en http lcl
+# 1) Fuerza HTTPS
+# Si alguien llega con http:// se redirige a https://
 RewriteCond %{HTTPS} !=on
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-# 301: redirige TODO el tráfico con www -> sin www (dominio canónico)
+# 2) Fuerza dominio sin "www"
+# Redirige https://www.indoffpro.com → https://indoffpro.com
 RewriteCond %{HTTP_HOST} ^www\.indoffpro\.com$ [NC]
 RewriteRule ^(.*)$ https://indoffpro.com/$1 [L,R=301]
 
-# EXCEPCIONES: serve tal cual robots y sitemap
+# 3) Excepciones: no tocar robots.txt ni sitemap.xml
 RewriteRule ^(robots\.txt|sitemap\.xml)$ - [L]
 
-# Si el recurso existe como archivo o directorio, sírvelo tal cual
+# 4) Bloquear acceso a archivos/carpetas heredadas
+# Evita que Google intente indexar rutas viejas del hosting anterior
+RewriteRule ^(index\.php|cgi-bin/.*)$ - [F,L]
+
+# 5) Si el recurso existe como archivo o directorio, sírvelo directamente
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# Fallback de SPA (React/Vite): todo lo demás va a index.html
+# 6) Fallback de SPA (React/Vite build)
+# Todas las rutas internas → index.html
 RewriteRule ^ index.html [L]
 
-# Asegurar MIME correcto para XML (evita "Couldn't fetch" en GSC)
+# 7) Asegurar MIME correcto para XML
+# Para que GSC no diga "Couldn't fetch"
 AddType application/xml .xml
